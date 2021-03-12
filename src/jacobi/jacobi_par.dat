@@ -1,0 +1,8 @@
+size: 100 numWorkers: 1 maxDiff: 0.00000000000000000000 execution time: 32720 ms
+size: 200 numWorkers: 1 maxDiff: 0.00000000004012246091 execution time: 32360 ms
+size: 100 numWorkers: 2 maxDiff: 0.00000000000000000000 execution time: 18623 ms
+size: 200 numWorkers: 2 maxDiff: 0.00000000004012246091 execution time: 17309 ms
+size: 100 numWorkers: 3 maxDiff: 0.00000000000000000000 execution time: 22614 ms
+size: 200 numWorkers: 3 maxDiff: 0.00000000004012246091 execution time: 22079 ms
+size: 100 numWorkers: 4 maxDiff: 0.00000000000000000000 execution time: 17376 ms
+size: 200 numWorkers: 4 maxDiff: 0.00000000004012246091 execution time: 16879 ms

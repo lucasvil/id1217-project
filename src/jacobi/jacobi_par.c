@@ -41,7 +41,8 @@ void printGrid(double** grid) {
     for (int j = 0; j < gridSize; j++) {
       if (j == 0) {
         fprintf(fp, "%g", grid[i][j]);
-      } else {
+      }
+      else {
         fprintf(fp, ", %g", grid[i][j]);
       }
     }
@@ -91,7 +92,8 @@ int main(int argc, char* argv[]) {
       if ((i == 0) || (j == 0) || (j == (gridSize - 1)) || (i == (gridSize - 1))) {
         grid[i][j] = 1;
         new[i][j] = 1;
-      } else {
+      }
+      else {
         grid[i][j] = 0;
         new[i][j] = 0;
       }
@@ -99,9 +101,12 @@ int main(int argc, char* argv[]) {
   }
 
   omp_set_num_threads(numWorkers);
+
+  double start_time = omp_get_wtime();
   jacobi(grid, new);
   printGrid(grid);
-
-
+  double end_time = omp_get_wtime();
+  int ms = (end_time - start_time) * 1000;
+  printf("execution time: %d ms\n", ms);
   return 0;
 }
