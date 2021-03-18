@@ -7,10 +7,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <time.h>
 
 #define MAX_ITERATIONS 100000000
 #define MAX_SIZE 10000
 #define FEW_ITERATIONS 4
+
+double maxDiff(double** grid, double** new, int size) {
+  double maxDiff = 0.0;
+  for (int i = 1; i <= size; i++) {
+    for (int j = 1; j <= size; j++) {
+      maxDiff = (fabs(grid[i][j] - new[i][j]) > maxDiff) ? fabs(grid[i][j] - new[i][j]) : maxDiff;
+    }
+  }
+  return maxDiff;
+}
 
 void printGrid(double** grid, int size) {
   FILE* fp = fopen("seq-data.out", "w");
@@ -98,7 +109,6 @@ double** initGrid(int size) {
       }
     }
   }
-
   return grid;
 }
 
@@ -121,6 +131,10 @@ int main(int argc, char* argv[]) {
   double** grid4 = initGrid(size4+2);
   double** new4 = initGrid(size4+2);
 
+  // start timer
+  clock_t start = clock();
+
+  // restrict from finest grid down
   jacobi(grid4, new4, size4, FEW_ITERATIONS);
   restrictGrid(grid4, grid3, size4);
 
@@ -130,15 +144,30 @@ int main(int argc, char* argv[]) {
   jacobi(grid2, new2, size2, FEW_ITERATIONS);
   restrictGrid(grid2, grid1, size2);
 
+  // coarsest grid reached, compute solution
   jacobi(grid1, new1, size1, numIters);
 
 
-
+  // interpolate back to finest grid
   interpolate(grid2, grid1, size2, size1);
+  jacobi(grid2, new2, size2, FEW_ITERATIONS);
   interpolate(grid3, grid2, size3, size2);
+  jacobi(grid3, new3, size3, FEW_ITERATIONS);
   interpolate(grid4, grid3, size4, size3);
-  printGrid(grid4, size4+2);
+  jacobi(grid4, new4, size4, FEW_ITERATIONS);
 
+  // calculate max difference
+  double diff = maxDiff(grid4, new4, size4);
+
+  // stop timer
+  clock_t end = clock();
+  int msec = ((end - start) * 1000) / CLOCKS_PER_SEC;
+
+  printf("Size: %d, Iterations: %d\n", size1, numIters);
+  printf("Execution time: %dms\n", msec);
+  printf("Maximum error %.5f\n", diff);
+
+  printGrid(grid4, size4+2);
 
   return 0;
 }
