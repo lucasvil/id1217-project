@@ -8,9 +8,9 @@
 #include <stdlib.h>
 #include <math.h>
 
-int numIters;
 #define MAX_ITERATIONS 100000000
 #define MAX_SIZE 10000
+#define FEW_ITERATIONS 4
 
 void printGrid(double** grid, int size) {
   FILE* fp = fopen("seq-data.out", "w");
@@ -27,17 +27,7 @@ void printGrid(double** grid, int size) {
   }
 }
 
-void maxDiff(double** grid, double** new, int size) {
-  double maxDiff = 0.0;
-  for (int i = 1; i < size; i++) {
-    for (int j = 1; j < size; j++) {
-      maxDiff = (fabs(grid[i][j] - new[i][j]) > maxDiff) ? fabs(grid[i][j] - new[i][j]) : maxDiff;
-    }
-  }
-  printf("maxDiff: %.20f \n", maxDiff);
-}
-
-void jacobi(double** grid, double** new, int size) {
+void jacobi(double** grid, double** new, int size, int numIters) {
   for (int iter = 1; iter < numIters; iter++) {
     for (int i = 1; i <= size; i++) {
       for (int j = 1; j <= size; j++) {
@@ -115,7 +105,7 @@ double** initGrid(int size) {
 int main(int argc, char* argv[]) {
   // take command line args
   int size1 = (argc > 1) ? ((atoi(argv[1]) < MAX_SIZE) ? atoi(argv[1]) : MAX_SIZE) : MAX_SIZE;
-  numIters = (argc > 2) ? ((atoi(argv[2]) < MAX_ITERATIONS) ? atoi(argv[2]) : MAX_ITERATIONS) : MAX_ITERATIONS;
+  int numIters = (argc > 2) ? ((atoi(argv[2]) < MAX_ITERATIONS) ? atoi(argv[2]) : MAX_ITERATIONS) : MAX_ITERATIONS;
 
   int size2 = (size1*2) + 1;
   int size3 = (size2*2) + 1;
@@ -131,16 +121,16 @@ int main(int argc, char* argv[]) {
   double** grid4 = initGrid(size4+2);
   double** new4 = initGrid(size4+2);
 
-  jacobi(grid4, new4, size4);
+  jacobi(grid4, new4, size4, FEW_ITERATIONS);
   restrictGrid(grid4, grid3, size4);
 
-  jacobi(grid3, new3, size3);
+  jacobi(grid3, new3, size3, FEW_ITERATIONS);
   restrictGrid(grid3, grid2, size3);
 
-  jacobi(grid2, new2, size2);
+  jacobi(grid2, new2, size2, FEW_ITERATIONS);
   restrictGrid(grid2, grid1, size2);
 
-  jacobi(grid1, new1, size1);
+  jacobi(grid1, new1, size1, numIters);
 
 
 
