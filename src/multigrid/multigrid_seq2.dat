@@ -1,0 +1,2 @@
+size: 12 Size: 12, Iterations: 20000000 Execution time: 33341 ms Maximum error 0.02763
+size: 24 Size: 24, Iterations: 5000000 Execution time: 32586 ms Maximum error 0.02763

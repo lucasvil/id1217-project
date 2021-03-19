@@ -1,0 +1,8 @@
+size: 12 numWorkers: 1 Size: 12, Iterations: 15000000 Execution time: 41777 ms Maximum error 0.02763
+size: 24 numWorkers: 1 Size: 24, Iterations: 4000000 Execution time: 31826 ms Maximum error 0.02763
+size: 12 numWorkers: 2 Size: 12, Iterations: 15000000 Execution time: 55457 ms Maximum error 0.02763
+size: 24 numWorkers: 2 Size: 24, Iterations: 4000000 Execution time: 27530 ms Maximum error 0.02763
+size: 12 numWorkers: 3 Size: 12, Iterations: 15000000 Execution time: 55980 ms Maximum error 0.02763
+size: 24 numWorkers: 3 Size: 24, Iterations: 4000000 Execution time: 25803 ms Maximum error 0.02763
+size: 12 numWorkers: 4 Size: 12, Iterations: 15000000 Execution time: 66885 ms Maximum error 0.02763
+size: 24 numWorkers: 4 Size: 24, Iterations: 4000000 Execution time: 27189 ms Maximum error 0.02763
