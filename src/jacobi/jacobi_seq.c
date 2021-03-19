@@ -18,25 +18,26 @@
 
 int gridSize, numIters;
 
-void maxDiff(double** grid, double** new) {
+double maxDiff(double** grid, double** new) {
   double maxDiff = 0.0;
   for (int i = 1; i < gridSize; i++) {
     for (int j = 1; j < gridSize; j++) {
       maxDiff = (fabs(grid[i][j] - new[i][j]) > maxDiff) ? fabs(grid[i][j] - new[i][j]) : maxDiff;
     }
   }
-  printf("maxDiff: %.20f \n", maxDiff);
+  maxDiff;
 }
 
 void jacobi(double** grid, double** new) {
-  for (int iter = 1; iter < numIters; iter += 2) {
-    for (int i = 1; i < gridSize - 1; i++) {
-      for (int j = 1; j < gridSize - 1; j++) {
+  int boundary = gridSize - 1;
+  for (int iter = 1; iter < numIters; iter++) {
+    for (int i = 1; i < boundary; i++) {
+      for (int j = 1; j < boundary; j++) {
         new[i][j] = (grid[i - 1][j] + grid[i + 1][j] + grid[i][j - 1] + grid[i][j + 1]) * 0.25;
       }
     }
-    for (int i = 1; i < gridSize - 1; i++) {
-      for (int j = 1; j < gridSize - 1; j++) {
+    for (int i = 1; i < boundary; i++) {
+      for (int j = 1; j < boundary; j++) {
         grid[i][j] = (new[i - 1][j] + new[i + 1][j] + new[i][j - 1] + new[i][j + 1]) * 0.25;
       }
     }
@@ -44,7 +45,6 @@ void jacobi(double** grid, double** new) {
     printf("iter %d/%d\n", iter, numIters);
 #endif // debug
   }
-  maxDiff(grid, new);
 }
 
 void printGrid(double** grid) {
@@ -53,10 +53,9 @@ void printGrid(double** grid) {
     fprintf(fp, "[");
     for (int j = 0; j < gridSize; j++) {
       if (j == 0) {
-        fprintf(fp, "%g", grid[i][j]);
-      }
-      else {
-        fprintf(fp, ", %g", grid[i][j]);
+        fprintf(fp, "%.10f", grid[i][j]);
+      } else {
+        fprintf(fp, ", %.10f", grid[i][j]);
       }
     }
     fprintf(fp, "]\n");
@@ -65,9 +64,10 @@ void printGrid(double** grid) {
 
 int main(int argc, char* argv[]) {
   // take command line args
-  gridSize = (argc > 1) ? ((atoi(argv[1]) < MAX_SIZE) ? atoi(argv[1]) + 1 : MAX_SIZE + 1) : MAX_SIZE;
+  gridSize = (argc > 1) ? ((atoi(argv[1]) < MAX_SIZE) ? atoi(argv[1]) : MAX_SIZE) : MAX_SIZE;
   numIters = (argc > 2) ? ((atoi(argv[2]) < MAX_ITERATIONS) ? atoi(argv[2]) : MAX_ITERATIONS) : MAX_ITERATIONS;
 
+  gridSize += 2;
   // allocate memory for grids
   double** grid = malloc(gridSize * sizeof(double));
   double** new = malloc(gridSize * sizeof(double));
@@ -82,18 +82,21 @@ int main(int argc, char* argv[]) {
       if ((i == 0) || (j == 0) || (j == (gridSize - 1)) || (i == (gridSize - 1))) {
         grid[i][j] = 1;
         new[i][j] = 1;
-      }
-      else {
+      } else {
         grid[i][j] = 0;
         new[i][j] = 0;
       }
     }
   }
+
   clock_t start = clock();
   jacobi(grid, new);
+  double diff = maxDiff(grid, new);
   clock_t end = clock();
   int msec = ((end - start) * 1000) / CLOCKS_PER_SEC;
-  printf("execution time: %d ms\n", msec);
+  printf("Size: %d, Iterations: %d\n", gridSize-2, numIters);
+  printf("Execution time: %d ms\n", msec);
+  printf("Maximum error %g\n", diff);
   printGrid(grid);
   return 0;
 }
