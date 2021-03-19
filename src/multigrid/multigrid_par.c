@@ -43,8 +43,7 @@ void printGrid(double** grid, int size) {
     for (int j = 0; j < size; j++) {
       if (j == 0) {
         fprintf(fp, "%.10f", grid[i][j]);
-      }
-      else {
+      } else {
         fprintf(fp, ", %.10f", grid[i][j]);
       }
     }
@@ -125,8 +124,7 @@ double** initGrid(int size) {
     for (int j = 0; j < size; j++) {
       if ((i == 0) || (j == 0) || (j == (size - 1)) || (i == (size - 1))) {
         grid[i][j] = 1;
-      }
-      else {
+      } else {
         grid[i][j] = 0;
       }
     }
